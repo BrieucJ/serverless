@@ -30,11 +30,11 @@ provider "aws" {
 }
 
 locals {
-  prefix="${var.project_name}-${terraform.workspace}"
-  bucket_name="${var.project_name}-${terraform.workspace}-bucket"
-  function_name="${var.project_name}-${terraform.workspace}-api"
-  role_name="${var.project_name}-${terraform.workspace}-lambda_role"
-  gateway_name="${var.project_name}-${terraform.workspace}-gateway"
+  prefix="${var.project_name}"
+  bucket_name="${var.project_name}-bucket"
+  function_name="${var.project_name}-api"
+  role_name="${var.project_name}-lambda_role"
+  gateway_name="${var.project_name}-gateway"
 }
 
 # S3 BUCKET
@@ -77,6 +77,20 @@ resource "aws_cloudwatch_log_group" "api" {
   retention_in_days = 30
 }
 
+resource "aws_lambda_alias" "alias_dev" {
+  name             = "dev"
+  description      = "dev"
+  function_name    = aws_lambda_function.api.arn
+  function_version = "$LATEST"
+}
+
+resource "aws_lambda_alias" "alias_prod" {
+  name             = "prod"
+  description      = "prod"
+  function_name    = aws_lambda_function.api.arn
+  function_version = "$LATEST"
+}
+
 #IAM
 resource "aws_iam_role" "lambda_exec" {
   name = local.role_name
@@ -108,6 +122,9 @@ resource "aws_apigatewayv2_stage" "dev" {
   api_id = aws_apigatewayv2_api.lambda.id
   name = "dev"
   auto_deploy = true
+  stage_variables = {
+    "stage" = "dev"
+  }
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gateway.arn
     format = jsonencode({
@@ -130,6 +147,9 @@ resource "aws_apigatewayv2_stage" "prod" {
   api_id = aws_apigatewayv2_api.lambda.id
   name = "prod"
   auto_deploy = true
+  stage_variables = {
+    "stage" = "prod"
+  }
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gateway.arn
     format = jsonencode({
