@@ -32,7 +32,7 @@ jobs:
 
       - name: Deploy on prod
         if: github.ref == 'refs/heads/master'
-        run: terraform -chdir=infra plan prod
+        run: terraform -chdir=infra plan
 
       - name: Deploy on dev
         if: github.ref == 'refs/heads/develop'
