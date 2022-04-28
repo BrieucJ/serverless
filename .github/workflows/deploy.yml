@@ -32,7 +32,7 @@ jobs:
 
       - name: Deploy on prod
         if: github.ref == 'refs/heads/master'
-        run: bash ./infra/deploy.sh dev
+        run: bash ./infra/deploy.sh prod
 
       - name: Deploy on dev
         if: github.ref == 'refs/heads/develop'
