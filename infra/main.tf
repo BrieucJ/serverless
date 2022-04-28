@@ -167,10 +167,27 @@ resource "aws_apigatewayv2_deployment" "prod" {
   # depends_on = [
   #   aws_apigatewayv2_integration.api
   # ]
-  # lifecycle {
-  #   create_before_destroy = true
-  # }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+
+resource "aws_lambda_permission" "dev" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.api.function_name}:dev"
+  principal = "apigateway.amazonaws.com"
+  source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "prod" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.api.function_name}:prod"
+  principal = "apigateway.amazonaws.com"
+  source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
+}
+
 
 resource "aws_apigatewayv2_integration" "api" {
   api_id = aws_apigatewayv2_api.lambda.id
@@ -189,14 +206,6 @@ resource "aws_apigatewayv2_route" "api" {
 resource "aws_cloudwatch_log_group" "api_gateway" {
   name = "/aws/api_gateway/${aws_apigatewayv2_api.lambda.name}"
   retention_in_days = 30
-}
-
-resource "aws_lambda_permission" "api_gateway" {
-  statement_id = "AllowExecutionFromAPIGateway"
-  action = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.api.function_name
-  principal = "apigateway.amazonaws.com"
-  source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
 }
 
 # OUTPUTS
@@ -228,9 +237,4 @@ output "base_url_prod" {
 output "api_arn_prod" {
   description = "ARN for API Gateway stage."
   value = aws_apigatewayv2_stage.prod.arn
-}
-
-output "aws_lambda_permission" {
-  description="api_gateway source_arn"
-  value=aws_lambda_permission.api_gateway.source_arn
 }
