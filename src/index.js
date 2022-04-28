@@ -2,7 +2,7 @@
 
 module.exports.handler = async (event) => {
   console.log("Event: ", event);
-  let responseMessage = "Hello, PROD!";
+  let responseMessage = "Hello, DEV!";
   if (event.queryStringParameters && event.queryStringParameters["Name"]) {
     responseMessage = "Hello, " + event.queryStringParameters["Name"] + "!";
   }
