@@ -31,44 +31,24 @@ provider "aws" {
 
 locals {
   prefix="${var.project_name}"
-  bucket_name="${var.project_name}-bucket"
   function_name="${var.project_name}-api"
-  role_name="${var.project_name}-lambda_role"
+  role_name="${var.project_name}-role"
   gateway_name="${var.project_name}-gateway"
 }
 
-# S3 BUCKET
-resource "aws_s3_bucket" "api_bucket" {
-  bucket = local.bucket_name
-  force_destroy = true
-}
-
-resource "aws_s3_bucket_acl" "api_bucket" {
-  bucket = aws_s3_bucket.api_bucket.id
-  acl = "private"
-}
-
-data "archive_file" "api_lambda_zip" {
+data "archive_file" "zip" {
   type = "zip"
-  source_dir = "${path.module}/../src"
-  output_path = "${path.module}/../src.zip"
-}
-
-resource "aws_s3_object" "api_lambda_zip" {
-  bucket = aws_s3_bucket.api_bucket.id
-  key = "${var.project_name}.zip"
-  source = data.archive_file.api_lambda_zip.output_path
-  etag = filemd5(data.archive_file.api_lambda_zip.output_path)
+  source_dir = "../src"
+  output_path = "../src.zip"
 }
 
 # LAMBDA
 resource "aws_lambda_function" "api" {
   function_name = local.function_name
-  s3_bucket = aws_s3_bucket.api_bucket.id
-  s3_key = aws_s3_object.api_lambda_zip.key
+  filename = data.archive_file.zip.output_path
+  source_code_hash = filebase64sha256(data.archive_file.zip.output_path)
   runtime = "nodejs14.x"
   handler = "index.handler"
-  source_code_hash = data.archive_file.api_lambda_zip.output_base64sha256
   role = aws_iam_role.lambda_exec.arn
 }
 
@@ -121,7 +101,8 @@ resource "aws_apigatewayv2_api" "lambda" {
 resource "aws_apigatewayv2_stage" "dev" {
   api_id = aws_apigatewayv2_api.lambda.id
   name = "dev"
-  auto_deploy = true
+  auto_deploy = false
+  deployment_id=aws_apigatewayv2_deployment.dev.id
   stage_variables = {
     "stage" = "dev"
   }
@@ -145,8 +126,9 @@ resource "aws_apigatewayv2_stage" "dev" {
 
 resource "aws_apigatewayv2_stage" "prod" {
   api_id = aws_apigatewayv2_api.lambda.id
+  deployment_id=aws_apigatewayv2_deployment.prod.id
   name = "prod"
-  auto_deploy = true
+  auto_deploy = false
   stage_variables = {
     "stage" = "prod"
   }
@@ -166,6 +148,28 @@ resource "aws_apigatewayv2_stage" "prod" {
       }
     )
   }
+}
+
+resource "aws_apigatewayv2_deployment" "dev" {
+  api_id      = aws_apigatewayv2_route.api.api_id
+  description = "Development deployment"
+  # depends_on = [
+  #   aws_apigatewayv2_integration.api
+  # ]
+  # lifecycle {
+  #   create_before_destroy = true
+  # }
+}
+
+resource "aws_apigatewayv2_deployment" "prod" {
+  api_id      = aws_apigatewayv2_route.api.api_id
+  description = "Production deployment"
+  # depends_on = [
+  #   aws_apigatewayv2_integration.api
+  # ]
+  # lifecycle {
+  #   create_before_destroy = true
+  # }
 }
 
 resource "aws_apigatewayv2_integration" "api" {
@@ -196,10 +200,10 @@ resource "aws_lambda_permission" "api_gateway" {
 }
 
 # OUTPUTS
-output "api_bucket_name" {
-  description = "Name of the S3 bucket used to store function code."
-  value = aws_s3_bucket.api_bucket.id
-}
+# output "api_bucket_name" {
+#   description = "Name of the S3 bucket used to store function code."
+#   value = aws_s3_bucket.api_bucket.id
+# }
 
 output "function_name" {
   description = "Name of the Lambda function."
@@ -224,4 +228,9 @@ output "base_url_prod" {
 output "api_arn_prod" {
   description = "ARN for API Gateway stage."
   value = aws_apigatewayv2_stage.prod.arn
+}
+
+output "aws_lambda_permission" {
+  description="api_gateway source_arn"
+  value=aws_lambda_permission.api_gateway.source_arn
 }
