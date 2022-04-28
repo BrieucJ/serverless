@@ -21,13 +21,13 @@ zip -r ../src.zip *
 cd ..
 
 echo "aws lambda update-function-code $FUNCTION_NAME"
-aws lambda update-function-code --function-name=$FUNCTION_NAME --region=$AWS_REGION --zip-file=fileb://src.zip 
+aws lambda update-function-code --function-name=$FUNCTION_NAME --region=$AWS_REGION --zip-file=fileb://src.zip 2>/dev/null
 
 echo "waiting for function to update"
-aws lambda wait function-updated --function-name=$FUNCTION_NAME --region=$AWS_REGION
+aws lambda wait function-updated --function-name=$FUNCTION_NAME --region=$AWS_REGION 2>/dev/null
 
 VERSION=$(aws lambda publish-version --function-name="$FUNCTION_NAME" --region=$AWS_REGION --description=$1 --query Version --output text)
 echo "published version: $VERSION"
 
 echo "update alias $1"
-aws lambda update-alias --function-name=$FUNCTION_NAME --name=$1 --function-version=$VERSION --region=$AWS_REGION
+aws lambda update-alias --function-name=$FUNCTION_NAME --name=$1 --function-version=$VERSION --region=$AWS_REGION 2>/dev/null

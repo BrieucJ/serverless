@@ -153,20 +153,20 @@ resource "aws_apigatewayv2_stage" "prod" {
 resource "aws_apigatewayv2_deployment" "dev" {
   api_id      = aws_apigatewayv2_route.api.api_id
   description = "Development deployment"
-  # depends_on = [
-  #   aws_apigatewayv2_integration.api
-  # ]
-  # lifecycle {
-  #   create_before_destroy = true
-  # }
+  depends_on = [
+    aws_apigatewayv2_integration.api
+  ]
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_apigatewayv2_deployment" "prod" {
   api_id      = aws_apigatewayv2_route.api.api_id
   description = "Production deployment"
-  # depends_on = [
-  #   aws_apigatewayv2_integration.api
-  # ]
+  depends_on = [
+    aws_apigatewayv2_integration.api
+  ]
   lifecycle {
     create_before_destroy = true
   }
@@ -188,10 +188,11 @@ resource "aws_lambda_permission" "prod" {
   source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
 }
 
-
 resource "aws_apigatewayv2_integration" "api" {
   api_id = aws_apigatewayv2_api.lambda.id
-  integration_uri = aws_lambda_function.api.invoke_arn
+  # integration_uri = aws_lambda_function.api.invoke_arn
+  integration_uri = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.api.arn}:$${stageVariables.stage}/invocations"
+  # integration_uri = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/$${stageVariables.stage}/invocations"
   integration_type = "AWS_PROXY"
   integration_method = "POST"
 }
