@@ -24,11 +24,11 @@ logger.info('Lambda started')
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async (event: any, context: any, express: any): Promise<Context> => {
+  context: async ({ event, context, express }: { event: any; context: any; express: any }): Promise<Context> => {
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
     logger.info(`event ${event}`)
     logger.info(`context ${context}`)
     logger.info(`express ${express}`)
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
     const req = express.req as Request
     req.headers = event.headers
     context.req = req
