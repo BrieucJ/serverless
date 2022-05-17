@@ -57,10 +57,12 @@ jobs:
         if: github.ref == 'refs/heads/develop'
         run: |
           export DATABASE_URL=${{ secrets.DATABASE_DEV_URL }}
+          export LOG_LEVEL="info"
       - name: Define prod variables
         if: github.ref == 'refs/heads/master'
         run: |
           export DATABASE_URL=${{ secrets.DATABASE_URL }}
+          export LOG_LEVEL="info"
       - name: Deploy on prod
         if: github.ref == 'refs/heads/master'
         run: bash ./infra/deploy.sh prod

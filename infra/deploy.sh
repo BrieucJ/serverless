@@ -29,6 +29,10 @@ echo "waiting for function to update"
 aws lambda wait function-updated --function-name=$FUNCTION_NAME --region=$AWS_REGION >> /dev/null
 
 echo "update environment variable $1"
+echo $DATABASE_URL
+echo $LOG_LEVEL
+echo $ACCESS_TOKEN_SECRET
+echo $REFRESH_TOKEN_SECRET
 aws lambda update-function-configuration --function-name=$FUNCTION_NAME --region=$AWS_REGION --environment="Variables={NODE_ENV=$ENV_NAME,DATABASE_URL=$DATABASE_URL,LOG_LEVEL=$LOG_LEVEL,ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET,REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET}"
 
 echo "waiting for function-configuration to update"
