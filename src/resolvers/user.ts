@@ -16,6 +16,11 @@ export default {
       const users: User[] | null = await User.find({})
       return users
     },
+    async usersList(_parent: any, _args: any, context: Context, _info: any): Promise<User[] | null> {
+      Authenticated(context)
+      const users: User[] | null = await User.find({})
+      return users
+    },
   },
   Mutation: {},
 }
