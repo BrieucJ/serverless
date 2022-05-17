@@ -10,32 +10,35 @@ import { Request } from 'express'
 import { Context } from './utils/types'
 
 logger.info('Lambda started')
-;(async () => {
+
+const main = async () => {
   await source.initialize()
-})()
-  .then(() => {
-    logger.info('Datasource initialized')
+  logger.info('Datasource initialized')
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: async ({ event, context, express }: { event: any; context: any; express: any }): Promise<Context> => {
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
+      // logger.info(`event ${event}`)
+      // logger.info(`context ${context}`)
+      // logger.info(`express ${express}`)
+      const req = express.req as Request
+      req.headers = event.headers
+      context.req = req
+      return await authContext(context as Context)
+    },
+    formatError: errorFormatter,
+    formatResponse: responseFormatter,
+  })
+  return server
+}
+
+main()
+  .then((server) => {
+    exports.handler = server.createHandler()
+    logger.info('Server up')
   })
   .catch((error: any) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     logger.error('ERROR initializing Datasource', { error })
   })
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: async ({ event, context, express }: { event: any; context: any; express: any }): Promise<Context> => {
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
-    logger.info(`event ${event}`)
-    logger.info(`context ${context}`)
-    logger.info(`express ${express}`)
-    const req = express.req as Request
-    req.headers = event.headers
-    context.req = req
-    return await authContext(context as Context)
-  },
-  formatError: errorFormatter,
-  formatResponse: responseFormatter,
-})
-
-exports.handler = server.createHandler()
