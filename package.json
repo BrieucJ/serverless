@@ -8,8 +8,8 @@
     "compile": "tsc && cp package.json ./dist/package.json && cd dist && yarn install --prod",
     "start": "tsc && NODE_ENV=production node ./dist/index.js",
     "dev": "concurrently 'tsc -w && cp .env.development ./dist/.env.development' 'NODE_ENV=development nodemon ./dist/index.js'",
-    "test": "NODE_ENV=test jest --silent=false --verbose --runInBand",
-    "test:coverage": "NODE_ENV=test jest  --coverage",
+    "test": "yarn compile && cp .env.test ./dist/.env.test && NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest ./dist --silent=false --verbose --runInBand",
+    "test:coverage": "yarn compile && cp .env.test ./dist/.env.test && NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest ./dist --runInBand --coverage",
     "lint": "eslint ./src --ext .ts --fix",
     "format": "prettier --write \"**/*.+(js|ts|json)\"",
     "husky": "husky install"
@@ -57,7 +57,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.6.0",
     "nodemailer": "^6.7.3",
-    "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.3",
     "winston": "^3.6.0"
