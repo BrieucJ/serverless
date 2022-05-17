@@ -25,11 +25,15 @@ const apolloServer = new ApolloServer({
   formatResponse: responseFormatter,
 })
 logger.info('Apollo server initialized')
-
 ;(async () => {
   await source.initialize()
-  logger.info('Datasource initialized')
 })()
+  .then(() => {
+    logger.info('Datasource initialized')
+  })
+  .catch((error) => {
+    logger.error(error)
+  })
 
 logger.info('export handler')
 exports.handler = apolloServer.createHandler()
