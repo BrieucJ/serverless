@@ -12,32 +12,24 @@ import { Context } from './utils/types'
 logger.info('Lambda started')
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
 
-const handler = async () => {
+const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: async ({ event, context, express }: { event: any; context: any; express: any }): Promise<Context> => {
+    const req = express.req as Request
+    req.headers = event.headers
+    context.req = req
+    return await authContext(context as Context)
+  },
+  formatError: errorFormatter,
+  formatResponse: responseFormatter,
+})
+logger.info('Apollo server initialized')
+
+;(async () => {
   await source.initialize()
   logger.info('Datasource initialized')
-  const apolloServer = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: async ({ event, context, express }: { event: any; context: any; express: any }): Promise<Context> => {
-      const req = express.req as Request
-      req.headers = event.headers
-      context.req = req
-      return await authContext(context as Context)
-    },
-    formatError: errorFormatter,
-    formatResponse: responseFormatter,
-  })
-  logger.info('Apollo server initialized')
-  return apolloServer.createHandler()
-}
+})()
 
-// main()
-//   .then((server) => {
-//     logger.info('Apollo server up')
-//     const apolloServer = server
-//   })
-//   .catch((error: any) => {
-//     logger.error('ERROR', { error })
-//   })
-
-exports.handler = handler
+logger.info('export handler')
+exports.handler = apolloServer.createHandler()
