@@ -4,7 +4,7 @@
   "description": "boilerplate",
   "scripts": {
     "watch": "tsc -w",
-    "compile": "tsc && cp package.json ./dist/package.json && cd dist && yarn install",
+    "compile": "tsc && cp package.json ./dist/package.json && cd dist && yarn install --prod",
     "db:seed": "NODE_ENV=development ts-node ./src/db/seed.ts",
     "db:drop": "NODE_ENV=development ts-node ./src/db/drop.ts",
     "start": "yarn run start:ts",
@@ -53,7 +53,6 @@
     "@types/express": "^4.17.13",
     "apollo-server-express": "^3.6.7",
     "apollo-server-lambda": "^3.6.7",
-    "aws-lambda": "^1.0.7",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.0",

@@ -7,7 +7,6 @@ import responseFormatter from './utils/responseFormatter'
 import { authContext } from './utils/authentication'
 import logger from './utils/logger'
 import { Request } from 'express'
-import { APIGatewayEvent } from 'aws-lambda'
 import { Context } from './utils/types'
 
 logger.info('Lambda started')
@@ -25,7 +24,7 @@ logger.info('Lambda started')
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async (event: APIGatewayEvent, context: any, express: any): Promise<Context> => {
+  context: async (event: any, context: any, express: any): Promise<Context> => {
     /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
     const req = express.req as Request
     req.headers = event.headers
