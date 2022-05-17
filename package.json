@@ -16,7 +16,8 @@
     "test": "NODE_ENV=test jest --silent=false --verbose --runInBand",
     "test:coverage": "NODE_ENV=test jest  --coverage",
     "lint": "eslint ./src --ext .ts --fix",
-    "format": "prettier --write \"**/*.+(js|ts|json)\""
+    "format": "prettier --write \"**/*.+(js|ts|json)\"",
+    "prepare": "husky install"
   },
   "keywords": [
     "postgreSQL, typeORM, graphQL, Express, Apollo"
