@@ -11,10 +11,10 @@ import { Context } from './utils/types'
 
 logger.info('Lambda started')
 
-const main = async () => {
+exports.handler = async () => {
   await source.initialize()
   logger.info('Datasource initialized')
-  const server = new ApolloServer({
+  const apolloServer = new ApolloServer({
     typeDefs,
     resolvers,
     context: async ({ event, context, express }: { event: any; context: any; express: any }): Promise<Context> => {
@@ -30,15 +30,20 @@ const main = async () => {
     formatError: errorFormatter,
     formatResponse: responseFormatter,
   })
-  return server
+  logger.info('ApolloServer initialized')
+  return apolloServer.createHandler()
 }
 
-main()
-  .then((server) => {
-    exports.handler = server.createHandler()
-    logger.info('Server up')
-  })
-  .catch((error: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    logger.error('ERROR initializing Datasource', { error })
-  })
+// let server
+
+// main()
+//   .then((apolloServer) => {
+//     exports.handler = apolloServer.createHandler()
+//     logger.info('Server up')
+//   })
+//   .catch((error: any) => {
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+//     logger.error('ERROR initializing Datasource', { error })
+//   })
+
+// exports.handler = server
