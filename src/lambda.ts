@@ -13,11 +13,14 @@ import { Context } from './utils/types'
 logger.info('Lambda started')
 ;(async () => {
   await source.initialize()
-  logger.info('Datasource initialized')
-})().catch((error: any) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  logger.error('ERROR initializing Datasource', { error })
-})
+})()
+  .then(() => {
+    logger.info('Datasource initialized')
+  })
+  .catch((error: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    logger.error('ERROR initializing Datasource', { error })
+  })
 
 const server = new ApolloServer({
   typeDefs,
