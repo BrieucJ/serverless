@@ -12,7 +12,7 @@ import { Context } from './utils/types'
 logger.info('Lambda started')
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
 
-const main = async () => {
+const handler = async () => {
   await source.initialize()
   logger.info('Datasource initialized')
   const apolloServer = new ApolloServer({
@@ -27,14 +27,17 @@ const main = async () => {
     formatError: errorFormatter,
     formatResponse: responseFormatter,
   })
-  return apolloServer
+  logger.info('Apollo server initialized')
+  return apolloServer.createHandler()
 }
 
-main()
-  .then((apolloServer) => {
-    logger.info('Apollo server up')
-    exports.handler = apolloServer.createHandler()
-  })
-  .catch((error: any) => {
-    logger.error('ERROR', { error })
-  })
+// main()
+//   .then((server) => {
+//     logger.info('Apollo server up')
+//     const apolloServer = server
+//   })
+//   .catch((error: any) => {
+//     logger.error('ERROR', { error })
+//   })
+
+exports.handler = handler
