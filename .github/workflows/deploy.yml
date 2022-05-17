@@ -32,7 +32,8 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     steps:
-      - run: echo "test: ${{ needs.test.result }}"
+      - run: |
+        echo "test: ${{ needs.test.result }}"
   # build:
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
