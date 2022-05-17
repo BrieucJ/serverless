@@ -29,12 +29,7 @@ echo "waiting for function to update"
 aws lambda wait function-updated --function-name=$FUNCTION_NAME --region=$AWS_REGION >> /dev/null
 
 echo "update environment variable $1"
-echo $AWS_REGION
-echo $DATABASE_URL
-echo $LOG_LEVEL
-echo $ACCESS_TOKEN_SECRET
-echo $REFRESH_TOKEN_SECRET
-aws lambda update-function-configuration --function-name=$FUNCTION_NAME --region=$AWS_REGION --environment="Variables={NODE_ENV=$ENV_NAME,DATABASE_URL=$DATABASE_URL,LOG_LEVEL=$LOG_LEVEL,ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET,REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET}"
+aws lambda update-function-configuration --function-name=$FUNCTION_NAME --region=$AWS_REGION --environment="Variables={NODE_ENV=$ENV_NAME,DATABASE_URL=$DATABASE_URL,LOG_LEVEL=$LOG_LEVEL,ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET,REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET}" >> /dev/null
 
 echo "waiting for function-configuration to update"
 aws lambda wait function-updated --function-name=$FUNCTION_NAME --region=$AWS_REGION >> /dev/null
@@ -42,5 +37,5 @@ aws lambda wait function-updated --function-name=$FUNCTION_NAME --region=$AWS_RE
 VERSION=$(aws lambda publish-version --function-name="$FUNCTION_NAME" --region=$AWS_REGION --description=$1 --query Version --output text)
 echo "published version: $VERSION"
 
-# echo "update alias $1"
-# aws lambda update-alias --function-name=$FUNCTION_NAME --name=$1 --function-version=$VERSION --region=$AWS_REGION >> /dev/null
+echo "update alias $1"
+aws lambda update-alias --function-name=$FUNCTION_NAME --name=$1 --function-version=$VERSION --region=$AWS_REGION >> /dev/null
