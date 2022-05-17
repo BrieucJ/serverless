@@ -28,6 +28,10 @@ jobs:
         run: yarn install
       - name: Run tests
         run: yarn test
+  keep:
+    runs-on: ubuntu-latest
+    steps:
+      run: echo 'KEEP going'
   # build:
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
