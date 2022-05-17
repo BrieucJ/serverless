@@ -1,39 +1,69 @@
 name: Deploy
-
 on:
   push:
     branches:
       - master
       - develop
-
 env:
   AWS_REGION: eu-west-3
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
-
     steps:
-      - name: Checkout
+      - name: Checkout test
         uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Define variables
+      - name: Define environment variables
         run: |
-          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          export ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}
+          export REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}
+          export LOG_LEVEL=debug
+          export DATABASE_URL=${{ secrets.DATABASE_TEST_URL }}
 
-      - name: Deploy on prod
-        if: github.ref == 'refs/heads/master'
-        run: bash ./infra/deploy.sh prod
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Install dependencies
+        run: yarn install
+      - name: Run tests
+        run: yarn test
+  # build:
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
 
-      - name: Deploy on dev
-        if: github.ref == 'refs/heads/develop'
-        run: bash ./infra/deploy.sh dev
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ env.AWS_REGION }}
+  #     - name: Define common variables
+  #       run: |
+  #         export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         export ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}
+  #         export REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}
+  #         export LOG_LEVEL=${{ secrets.LOG_LEVEL }}
+  #         export AWS_REGION=${{ env.AWS_REGION }}
+
+  #     - name: Define dev variables
+  #       if: github.ref == 'refs/heads/develop'
+  #       run: |
+  #         export DATABASE_URL=${{ secrets.DATABASE_DEV_URL }}
+
+  #     - name: Define prod variables
+  #       if: github.ref == 'refs/heads/master'
+  #       run: |
+  #         export DATABASE_URL=${{ secrets.DATABASE_URL }}
+
+  #     - name: Deploy on prod
+  #       if: github.ref == 'refs/heads/master'
+  #       run: bash ./infra/deploy.sh prod
+
+  #     - name: Deploy on dev
+  #       if: github.ref == 'refs/heads/develop'
+  #       run: bash ./infra/deploy.sh dev
