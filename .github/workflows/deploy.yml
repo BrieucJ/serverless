@@ -51,19 +51,21 @@ jobs:
       #     export REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }}
       #     export LOG_LEVEL=${{ secrets.LOG_LEVEL }}
       #     export AWS_REGION=${{ env.AWS_REGION }}
-      - name: Define dev variables
-        if: github.ref == 'refs/heads/develop'
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
-          LOG_LEVEL: 'info'
-      - name: Define prod variables
+      # - name: Define dev variables
+      #   if: github.ref == 'refs/heads/develop'
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
+      #     LOG_LEVEL: 'info'
+
+      - name: Deploy on prod
         if: github.ref == 'refs/heads/master'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           LOG_LEVEL: 'info'
-      - name: Deploy on prod
-        if: github.ref == 'refs/heads/master'
         run: bash ./infra/deploy.sh prod
       - name: Deploy on dev
         if: github.ref == 'refs/heads/develop'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
+          LOG_LEVEL: 'info'
         run: bash ./infra/deploy.sh dev
