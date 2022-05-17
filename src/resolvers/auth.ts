@@ -14,6 +14,7 @@ import {
 } from '../utils/types.js'
 import { comparePassword, createToken, verifyToken } from '../utils/authentication.js'
 import mailer from '../utils/mailer.js'
+import logger from 'src/utils/logger.js'
 
 export default {
   Query: {
@@ -41,13 +42,20 @@ export default {
   },
   Mutation: {
     async register(_parent: any, args: RegisterInput, _context: Context, _info: any): Promise<Tokens> {
+      let start: any = new Date()
+      logger.info('Register user create start')
       const user: User = await User.create({
         email: args.email,
         username: args.username,
         password: args.password,
       }).save()
+      let end: any = new Date()
+      logger.info(`Register user create end ${end - start}`)
+      start = new Date()
       const accessToken: string = createToken(TokenType.accessToken, user)
       const refreshToken: string = createToken(TokenType.refreshToken, user)
+      end = new Date()
+      logger.info(`Register token end ${end - start}`)
       return { accessToken, refreshToken }
     },
     async confirmEmail(_parent: any, args: confirmEmailInput, _context: Context, _info: any): Promise<Tokens> {
