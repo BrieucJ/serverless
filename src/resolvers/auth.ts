@@ -14,7 +14,7 @@ import {
 } from '../utils/types.js'
 import { comparePassword, createToken, verifyToken } from '../utils/authentication.js'
 import mailer from '../utils/mailer.js'
-import logger from 'src/utils/logger.js'
+import logger from '../utils/logger.js'
 
 export default {
   Query: {
