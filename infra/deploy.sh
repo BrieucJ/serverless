@@ -16,11 +16,11 @@ API_GATEWAY_ID=$(aws apigatewayv2 get-apis --region=$AWS_REGION --query "Items[?
 
 echo "zip dist.js"
 cd dist
-zip -r ../dist.zip *  >> /dev/null
+zip -r ../dist.zip * >> /dev/null
 cd ..
 
 echo "update-function-code $FUNCTION_NAME"
-aws lambda update-function-code --function-name=$FUNCTION_NAME --region=$AWS_REGION --zip-file=fileb://dist.zip >> /dev/null
+aws lambda update-function-code --function-name=$FUNCTION_NAME --region=$AWS_REGION --zip-file=fileb://dist.zip --publish
 
 echo "waiting for function to update"
 aws lambda wait function-updated --function-name=$FUNCTION_NAME --region=$AWS_REGION >> /dev/null
