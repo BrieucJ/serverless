@@ -109,7 +109,7 @@ describe('User entity', () => {
       expect(error.extensions.errors.length).toEqual(1)
       expect(error.extensions.code).toEqual('BAD_USER_INPUT')
       expect(Object.keys(error.extensions.errors[0].constraints)[0]).toBe('isLength')
-      expect(Object.values(error.extensions.errors[0].constraints)[0]).toBe('username_must_be_between_3_and_50_characters2222')
+      expect(Object.values(error.extensions.errors[0].constraints)[0]).toBe('username_must_be_between_3_and_50_characters')
     })
     const userCount = await User.count()
     expect(userCount).toEqual(1)
