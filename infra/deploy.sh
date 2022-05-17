@@ -33,6 +33,3 @@ aws lambda wait function-updated --function-name=$FUNCTION_NAME --region=$AWS_RE
 
 VERSION=$(aws lambda publish-version --function-name="$FUNCTION_NAME" --region=$AWS_REGION --description=$1 --query Version --output text)
 echo "published version: $VERSION"
-
-# echo "update alias $1"
-# aws lambda update-alias --function-name=$FUNCTION_NAME --name=$1 --function-version=$VERSION --region=$AWS_REGION >> /dev/null
