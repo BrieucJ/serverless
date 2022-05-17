@@ -1,12 +1,12 @@
-import { DataSource } from "typeorm";
-import { User } from "../entities";
+import { DataSource } from 'typeorm'
+import { User } from '../entities'
 
 export default new DataSource({
-  type: "mongodb",
+  type: 'mongodb',
   url: process.env.DATABASE_URL,
   logging: false,
-  database: `database_${process.env.NODE_ENV}`,
+  database: `database_${process.env.NODE_ENV!}`,
   synchronize: true,
   dropSchema: false,
   entities: [User],
-});
+})
