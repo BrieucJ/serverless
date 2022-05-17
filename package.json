@@ -2,17 +2,12 @@
   "name": "server",
   "version": "0.0.1",
   "description": "boilerplate",
+  "type": "module",
   "scripts": {
     "watch": "tsc -w",
     "compile": "tsc && cp package.json ./dist/package.json && cd dist && yarn install --prod",
-    "db:seed": "NODE_ENV=development ts-node ./src/db/seed.ts",
-    "db:drop": "NODE_ENV=development ts-node ./src/db/drop.ts",
-    "start": "yarn run start:ts",
-    "dev": "yarn run dev:ts",
-    "start:ts": "NODE_ENV=production ts-node ./src/index.ts",
-    "dev:ts": "NODE_ENV=development ts-node-dev ./src/index.ts",
-    "start:js": "yarn run compile && NODE_ENV=production node ./dist/index.js",
-    "dev:js": "NODE_ENV=development nodemon ./dist/index.js",
+    "start": "tsc && NODE_ENV=production node ./dist/index.js",
+    "dev": "concurrently 'tsc -w && cp .env.development ./dist/.env.development' 'NODE_ENV=development nodemon ./dist/index.js'",
     "test": "NODE_ENV=test jest --silent=false --verbose --runInBand",
     "test:coverage": "NODE_ENV=test jest  --coverage",
     "lint": "eslint ./src --ext .ts --fix",
@@ -20,7 +15,7 @@
     "husky": "husky install"
   },
   "keywords": [
-    "postgreSQL, typeORM, graphQL, Express, Apollo"
+    "MongoDB, typeORM, graphQL, Express, Apollo, Terraform, AWS Lambda"
   ],
   "author": "Brieuc JAMAIN",
   "license": "MIT",
@@ -35,6 +30,7 @@
     "apollo-link": "^1.2.14",
     "apollo-link-http": "^1.5.17",
     "casual": "^1.6.2",
+    "concurrently": "^7.2.0",
     "cross-fetch": "^3.1.5",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",

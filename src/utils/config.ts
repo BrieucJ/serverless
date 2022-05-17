@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import path from 'path'
-import logger from './logger'
+import logger from './logger.js'
 
 if (!process.env.NODE_ENV) {
   logger.error('process.env.NODE_ENV must be defined')

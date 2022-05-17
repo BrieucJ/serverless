@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express'
-import { User } from '../entities'
+import { User } from '../entities/index.js'
 import casual from 'casual'
-import { initTestServer, initTestDB } from '../utils/testing'
+import { initTestServer, initTestDB } from '../utils/testing.js'
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
 

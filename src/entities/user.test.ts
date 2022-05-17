@@ -1,7 +1,7 @@
-import '../utils/config'
-import User from './user'
-import source from '../utils/source'
-import { comparePassword } from '../utils/authentication'
+import '../utils/config.js'
+import User from './user.js'
+import source from '../utils/source.js'
+import { comparePassword } from '../utils/authentication.js'
 import { UserInputError } from 'apollo-server-express'
 // ValidationError
 import casual from 'casual'

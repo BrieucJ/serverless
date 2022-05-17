@@ -1,5 +1,5 @@
-import { User } from '../entities'
-import { DecodedToken, TokenType, Context } from './types'
+import { User } from '../entities/index.js'
+import { DecodedToken, TokenType, Context } from './types.js'
 import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'

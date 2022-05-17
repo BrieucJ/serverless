@@ -1,5 +1,5 @@
 import { ForbiddenError, AuthenticationError } from 'apollo-server-express'
-import { User } from '../entities'
+import { User } from '../entities/index.js'
 import {
   Context,
   DecodedToken,
@@ -11,9 +11,9 @@ import {
   RegisterInput,
   confirmEmailInput,
   changePasswordInput,
-} from '../utils/types'
-import { comparePassword, createToken, verifyToken } from '../utils/authentication'
-import mailer from '../utils/mailer'
+} from '../utils/types.js'
+import { comparePassword, createToken, verifyToken } from '../utils/authentication.js'
+import mailer from '../utils/mailer.js'
 
 export default {
   Query: {

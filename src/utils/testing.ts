@@ -10,8 +10,8 @@ import fetch from 'cross-fetch'
 import { HttpLink } from 'apollo-link-http'
 import { execute, toPromise } from 'apollo-link'
 import express from 'express'
-import source from './source'
-import { ExecuteArguments } from './types'
+import source from './source.js'
+import { ExecuteArguments } from './types.js'
 
 export const initTestServer = async () => {
   const app = express()

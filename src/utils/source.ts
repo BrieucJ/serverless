@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm'
-import { User } from '../entities'
+import { User } from '../entities/index.js'
 
 export default new DataSource({
   type: 'mongodb',

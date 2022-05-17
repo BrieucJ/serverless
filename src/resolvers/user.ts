@@ -1,6 +1,6 @@
-import { Context } from '../utils/types'
-import { User } from '../entities'
-import { Authenticated } from '../utils/authentication'
+import { Context } from '../utils/types.js'
+import { User } from '../entities/index.js'
+import { Authenticated } from '../utils/authentication.js'
 
 export default {
   Query: {

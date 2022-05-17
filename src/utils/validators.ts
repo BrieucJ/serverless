@@ -1,6 +1,6 @@
 import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator'
 import { BaseEntity } from 'typeorm'
-import { User } from '../entities'
+import { User } from '../entities/index.js'
 
 export function IsEmailUnique(validationOptions?: ValidationOptions) {
   return function (object: BaseEntity, propertyName: string) {

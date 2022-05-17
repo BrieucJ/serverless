@@ -1,17 +1,18 @@
 import { ApolloServer } from 'apollo-server-lambda'
-import source from './utils/source'
-import resolvers from './resolvers'
-import typeDefs from './typeDefs'
-import errorFormatter from './utils/errorFormatter'
-import responseFormatter from './utils/responseFormatter'
-import { authContext } from './utils/authentication'
-import logger from './utils/logger'
+import source from './utils/source.js'
+import resolvers from './resolvers/index.js'
+import typeDefs from './typeDefs/index.js'
+import errorFormatter from './utils/errorFormatter.js'
+import responseFormatter from './utils/responseFormatter.js'
+import { authContext } from './utils/authentication.js'
+import logger from './utils/logger.js'
 import { Request } from 'express'
 import { Context } from './utils/types'
 
 logger.info('Lambda started')
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
-
+await source.initialize()
+logger.info('Source initialized')
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
@@ -24,16 +25,6 @@ const apolloServer = new ApolloServer({
   formatError: errorFormatter,
   formatResponse: responseFormatter,
 })
-logger.info('Apollo server initialized')
-;(async () => {
-  await source.initialize()
-})()
-  .then(() => {
-    logger.info('Datasource initialized')
-  })
-  .catch((error) => {
-    logger.error(error)
-  })
+logger.info('Apollo server started')
 
-logger.info('export handler')
-exports.handler = apolloServer.createHandler()
+export const handler = apolloServer.createHandler()

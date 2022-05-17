@@ -1,13 +1,14 @@
-import { Entity, ObjectIdColumn, CreateDateColumn, UpdateDateColumn, Column, BaseEntity, BeforeInsert, BeforeUpdate, ObjectID } from 'typeorm'
-import { hashPassword } from '../utils/authentication'
+import TypeORM from 'typeorm'
+import { Entity, ObjectIdColumn, CreateDateColumn, UpdateDateColumn, Column, BaseEntity, BeforeInsert, BeforeUpdate } from 'typeorm'
+import { hashPassword } from '../utils/authentication.js'
 import { Length, IsEmail, MinLength, IsNotEmpty, validateOrReject } from 'class-validator'
 import { UserInputError, ValidationError } from 'apollo-server-express'
-import { IsEmailUnique } from '../utils/validators'
+import { IsEmailUnique } from '../utils/validators.js'
 
 @Entity()
 export default class User extends BaseEntity {
   @ObjectIdColumn()
-  _id: ObjectID
+  _id: TypeORM.ObjectID
 
   @Length(3, 50, { message: 'username_must_be_between_3_and_50_characters' })
   @IsNotEmpty({ message: 'username_cannot_be_empty' })

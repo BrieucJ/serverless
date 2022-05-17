@@ -1,9 +1,9 @@
 import nodemailer from 'nodemailer'
-import { User } from '../entities'
-import logger from './logger'
-import { FRONTEND_URL } from './config'
-import { createToken } from './authentication'
-import { TokenType } from './types'
+import { User } from '../entities/index.js'
+import logger from './logger.js'
+import { FRONTEND_URL } from './config.js'
+import { createToken } from './authentication.js'
+import { TokenType } from './types.js'
 
 type Mail = {
   from: string

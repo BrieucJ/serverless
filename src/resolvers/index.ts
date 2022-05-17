@@ -1,5 +1,5 @@
-import { default as AuthResolver } from './auth'
-import { default as UserResolver } from './user'
+import { default as AuthResolver } from './auth.js'
+import { default as UserResolver } from './user.js'
 
 export default {
   Query: {
