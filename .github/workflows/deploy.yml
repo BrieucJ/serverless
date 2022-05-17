@@ -35,6 +35,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+      - name: Install dependencies
+        run: yarn install
       - name: Compile src
         run: yarn compile
       - name: Configure AWS credentials
