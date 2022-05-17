@@ -25,6 +25,9 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async (event: any, context: any, express: any): Promise<Context> => {
+    logger.info(`event ${event}`)
+    logger.info(`context ${context}`)
+    logger.info(`express ${express}`)
     /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
     const req = express.req as Request
     req.headers = event.headers
