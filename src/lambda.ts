@@ -11,6 +11,7 @@ import { Context } from './utils/types'
 
 logger.info('Lambda started')
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
+
 const main = async () => {
   await source.initialize()
   logger.info('Datasource initialized')
@@ -18,9 +19,6 @@ const main = async () => {
     typeDefs,
     resolvers,
     context: async ({ event, context, express }: { event: any; context: any; express: any }): Promise<Context> => {
-      // logger.info(`event ${event}`)
-      // logger.info(`context ${context}`)
-      // logger.info(`express ${express}`)
       const req = express.req as Request
       req.headers = event.headers
       context.req = req
@@ -29,10 +27,14 @@ const main = async () => {
     formatError: errorFormatter,
     formatResponse: responseFormatter,
   })
-  logger.info('ApolloServer initialized')
-  return apolloServer.createHandler()
+  return apolloServer
 }
 
-exports.handler = (async () => {
-  await main()
-})()
+main()
+  .then((apolloServer) => {
+    logger.info('Apollo server up')
+    exports.handler = apolloServer.createHandler()
+  })
+  .catch((error: any) => {
+    logger.error('ERROR', { error })
+  })
