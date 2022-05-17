@@ -29,9 +29,10 @@ jobs:
       - name: Run tests
         run: yarn test
   keep:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'KEEP going'
+      - run: echo "test: ${{ needs.test.result }}"
   # build:
   #   runs-on: ubuntu-latest
   #   if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
