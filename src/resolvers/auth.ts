@@ -1,23 +1,23 @@
 // import { ForbiddenError, AuthenticationError } from 'apollo-server-express'
-import { UserController } from '../controllers/index.js'
+// import { UserController } from '../controllers/index.js'
 import {
   Context,
   //   DecodedToken,
   Tokens,
-  TokenType,
+  //   TokenType,
   //   LoginInput,
   //   refreshTokensInput,
   //   forgotPasswordInput,
   RegisterInput,
   //   confirmEmailInput,
   //   changePasswordInput,
-  UserType,
+  //   UserType,
 } from '../utils/types.js'
-import {
-  // comparePassword,
-  createToken,
-  //  verifyToken
-} from '../utils/authentication.js'
+// import {
+//   // comparePassword,
+//   createToken,
+//   //  verifyToken
+// } from '../utils/authentication.js'
 // import mailer from '../utils/mailer.js'
 import logger from '../utils/logger.js'
 
@@ -47,16 +47,19 @@ export default {
   },
   Mutation: {
     async register(_parent: any, args: RegisterInput, _context: Context, _info: any): Promise<Tokens> {
-      let start: any = new Date()
-      const resp = await UserController.create(args)
-      let end: any = new Date()
-      logger.info(`Register user create end ${end - start}`)
-      const user = await UserController.getById(resp.insertedId.toString())
-      start = new Date()
-      const accessToken: string = createToken(TokenType.accessToken, user as UserType)
-      const refreshToken: string = createToken(TokenType.refreshToken, user as UserType)
-      end = new Date()
-      logger.info(`Register token end ${end - start}`)
+      //   let start: any = new Date()
+      logger.info(args)
+      //   const resp = await UserController.create(args)
+      //   let end: any = new Date()
+      //   logger.info(`Register user create end ${end - start}`)
+      //   const user = await UserController.getById(resp.insertedId.toString())
+      //   start = new Date()
+      //   const accessToken: string = createToken(TokenType.accessToken, user as UserType)
+      //   const refreshToken: string = createToken(TokenType.refreshToken, user as UserType)
+      const accessToken: string = 'test'
+      const refreshToken: string = 'test'
+      //   end = new Date()
+      //   logger.info(`Register token end ${end - start}`)
       return { accessToken, refreshToken }
     },
     // async confirmEmail(_parent: any, args: confirmEmailInput, _context: Context, _info: any): Promise<Tokens> {
