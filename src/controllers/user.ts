@@ -13,14 +13,21 @@ export const create = async (params: RegisterInput) => {
   }
   params = { ...defaultParams, ...params }
   params.password = hashPassword(params.password)
+  const startVal: any = new Date()
   const validatedParams: UserType = (await userSchema.validateAsync(params, { abortEarly: false })) as UserType
-  let start: any = new Date()
+  const endVal: any = new Date()
+  logger.info(`Validation ${endVal - startVal}`)
+  const start: any = new Date()
   const resp = await db.collection('users').insertOne(validatedParams)
-  let end: any = new Date()
+  const end: any = new Date()
   logger.info(`insertOne ${end - start}`)
   return resp
 }
 
 export const getById = async (id: string) => {
-  return await db.collection('users').findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } })
+  const start: any = new Date()
+  const resp = await db.collection('users').findOne({ _id: new ObjectId(id) }, { projection: { password: 0 } })
+  const end: any = new Date()
+  logger.info(`getById ${end - start}`)
+  return resp
 }
