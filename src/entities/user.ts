@@ -4,6 +4,7 @@ import { hashPassword } from '../utils/authentication.js'
 import { Length, IsEmail, MinLength, IsNotEmpty, validateOrReject } from 'class-validator'
 import { UserInputError, ValidationError } from 'apollo-server-express'
 import { IsEmailUnique } from '../utils/validators.js'
+import logger from '../utils/logger.js'
 
 @Entity()
 export default class User extends BaseEntity {
@@ -39,9 +40,12 @@ export default class User extends BaseEntity {
   @BeforeInsert()
   @BeforeUpdate()
   async hook() {
+    let start: any = new Date()
     await validateOrReject(this, { validationError: { target: false } }).catch((errors: ValidationError[]) => {
       throw new UserInputError('VALIDATION_ERROR', { errors: errors })
     })
     this.password = hashPassword(this.password)
+    let end: any = new Date()
+    logger.info(`HOOK ${end - start}`)
   }
 }
