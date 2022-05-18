@@ -1,9 +1,9 @@
 import { ApolloServer } from 'apollo-server-lambda'
-import source from './utils/source.js'
+import { connect } from './utils/db.js'
 import resolvers from './resolvers/index.js'
 import typeDefs from './typeDefs/index.js'
-import errorFormatter from './utils/errorFormatter.js'
-import responseFormatter from './utils/responseFormatter.js'
+// import errorFormatter from './utils/errorFormatter.js'
+// import responseFormatter from './utils/responseFormatter.js'
 import { authContext } from './utils/authentication.js'
 import logger from './utils/logger.js'
 import { Request } from 'express'
@@ -12,7 +12,7 @@ import { Context } from './utils/types'
 logger.info('Lambda started')
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
 const start: any = new Date()
-await source.initialize()
+await connect()
 const end: any = new Date()
 logger.info(`Source initialized ${end - start}`)
 const apolloServer = new ApolloServer({
@@ -24,8 +24,8 @@ const apolloServer = new ApolloServer({
     context.req = req
     return await authContext(context as Context)
   },
-  formatError: errorFormatter,
-  formatResponse: responseFormatter,
+  //   formatError: errorFormatter,
+  //   formatResponse: responseFormatter,
 })
 logger.info('Apollo server started')
 

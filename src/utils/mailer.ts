@@ -1,9 +1,8 @@
 import nodemailer from 'nodemailer'
-import { User } from '../entities/index.js'
 import logger from './logger.js'
 import { FRONTEND_URL } from './config.js'
 import { createToken } from './authentication.js'
-import { TokenType } from './types.js'
+import { TokenType, UserType } from './types.js'
 
 type Mail = {
   from: string
@@ -13,7 +12,7 @@ type Mail = {
   html: string
 }
 
-const getMailOptions = (user: User, mailType: string): Mail => {
+const getMailOptions = (user: UserType, mailType: string): Mail => {
   const options = {
     from: '',
     to: user.email,
@@ -44,7 +43,7 @@ const getMailOptions = (user: User, mailType: string): Mail => {
   return options
 }
 
-export default async (user: User, mailType: string) => {
+export default async (user: UserType, mailType: string) => {
   logger.info(`Sending ${mailType} to ${user.email}`)
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing

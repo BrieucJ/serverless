@@ -7,21 +7,24 @@
     "watch": "tsc -w",
     "compile": "tsc && cp package.json ./dist/package.json && cd dist && yarn install --prod",
     "start": "tsc && NODE_ENV=production node ./dist/index.js",
-    "dev": "concurrently 'tsc -w && cp .env.development ./dist/.env.development' 'NODE_ENV=development nodemon ./dist/index.js'",
-    "test": "yarn compile && NODE_ENV=test yarn node --experimental-vm-modules $(yarn bin jest) --silent=false --verbose --runInBand",
-    "test:coverage": "yarn compile && NODE_ENV=test yarn node --experimental-vm-modules $(yarn bin jest) --runInBand --coverage",
+    "dev": "tsc && cp .env.development ./dist/.env.development && concurrently 'tsc -w' 'NODE_ENV=development nodemon ./dist/index.js'",
+    "test": "NODE_ENV=test jest --silent=false --verbose --runInBand",
+    "test:coverage": "NODE_ENV=test jest --runInBand --coverage",
     "lint": "eslint ./src --ext .ts --fix",
     "format": "prettier --write \"**/*.+(js|ts|json)\"",
     "husky": "husky install"
   },
   "keywords": [
-    "MongoDB, typeORM, graphQL, Express, Apollo, Terraform, AWS Lambda"
+    "MongoDB, graphQL, Express, Apollo, Terraform, AWS Lambda"
   ],
   "author": "Brieuc JAMAIN",
   "license": "MIT",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.13",
     "@types/jest": "^27.4.1",
+    "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.23",
     "@types/nodemailer": "^6.4.4",
@@ -40,25 +43,19 @@
     "nodemon": "^2.0.15",
     "prettier": "^2.6.0",
     "ts-jest": "^27.1.4",
-    "ts-node": "^10.7.0",
-    "ts-node-dev": "^1.1.8",
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "@types/bcryptjs": "^2.4.2",
-    "@types/express": "^4.17.13",
     "apollo-server-express": "^3.6.7",
     "apollo-server-lambda": "^3.6.7",
     "bcryptjs": "^2.4.3",
-    "class-validator": "^0.13.2",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "graphql": "^15.3.0",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.6.0",
     "nodemailer": "^6.7.3",
-    "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.3",
     "winston": "^3.6.0"
   }
 }

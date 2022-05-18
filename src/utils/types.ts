@@ -1,6 +1,6 @@
 import { DocumentNode } from 'graphql'
 import { Request, Response } from 'express'
-import { ObjectID } from 'typeorm'
+import { ObjectId } from 'mongodb'
 
 export type Tokens = {
   accessToken: string
@@ -51,7 +51,7 @@ export type forgotPasswordInput = {
 type Nullable<T> = T | null
 
 type UserContext = {
-  _id: ObjectID
+  _id: ObjectId
 }
 
 export type Context = {
@@ -64,4 +64,14 @@ export type ExecuteArguments = {
   query: DocumentNode
   variables: { [key: string]: string }
   context: Context
+}
+
+export type UserType = {
+  _id: ObjectId
+  username: string
+  email: string
+  password: Nullable<string>
+  confirmed: boolean
+  createdAt: Date
+  updatedAt: Date
 }

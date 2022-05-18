@@ -2,7 +2,7 @@
 
 ##### Technologies:
 
-apollo | express | graphql | husky | jest | jsonwebtoken | node | pg | terraform | typeorm | typescript | winston
+apollo | express | graphql | husky | jest | jsonwebtoken | node | mongoDB | mongoose | terraform | typescript | winston
 
 ##### Create databases
 * Postgres/Cockroach

@@ -1,5 +1,5 @@
-import { User } from '../entities/index.js'
-import { DecodedToken, TokenType, Context } from './types.js'
+import { db } from './db.js'
+import { DecodedToken, TokenType, Context, UserType } from './types.js'
 import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
@@ -14,7 +14,7 @@ export const comparePassword = async (password: string, hashedPassword: string):
   return result
 }
 
-export const createToken = (tokenType: TokenType, user: User): string => {
+export const createToken = (tokenType: TokenType, user: UserType): string => {
   switch (tokenType) {
     case TokenType.accessToken:
       return (
@@ -69,7 +69,7 @@ export const authContext = async (context: Context): Promise<Context> => {
   const accessToken = context.req.headers.authorization || ''
   try {
     const decodedToken = jwt.verify(accessToken.split(' ')[1], process.env.ACCESS_TOKEN_SECRET!) as any as DecodedToken
-    const user = await User.findOne({ where: { email: decodedToken.email } })
+    const user = await db.collection('users').findOne({ where: { email: decodedToken.email } })
     if (user === null) return { ...context, user: null }
     return { ...context, user: { _id: user._id } }
   } catch (error) {
