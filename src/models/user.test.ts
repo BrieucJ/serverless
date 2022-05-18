@@ -2,6 +2,7 @@ import '../utils/config.js'
 import userSchema from './user.js'
 import casual from 'casual'
 import { db, connect, client } from '../utils/db.js'
+import { UserType } from '../utils/types.js'
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access */
 describe('User schema', () => {
@@ -19,7 +20,7 @@ describe('User schema', () => {
   })
 
   it('should validate new user', async () => {
-    const resp = await userSchema.validateAsync(newUser, { abortEarly: false })
+    const resp: UserType = (await userSchema.validateAsync(newUser, { abortEarly: false })) as UserType
     expect(resp).toEqual(newUser)
   })
 

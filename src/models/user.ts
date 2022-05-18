@@ -35,7 +35,7 @@ export default Joi.object({
     if (!isObjectId(value)) {
       return helpers.error('any.invalid')
     }
-    return value
+    return value as string
   }),
   username: Joi.string().trim().min(3).max(50).required().messages({
     'string.base': 'username_is_required',

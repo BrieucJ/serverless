@@ -8,7 +8,7 @@ import {
   //   LoginInput,
   //   refreshTokensInput,
   //   forgotPasswordInput,
-  //   RegisterInput,
+  RegisterInput,
   //   confirmEmailInput,
   //   changePasswordInput,
   UserType,
@@ -46,15 +46,12 @@ export default {
     // },
   },
   Mutation: {
-    async register(_parent: any, args: any, _context: Context, _info: any): Promise<Tokens> {
+    async register(_parent: any, args: RegisterInput, _context: Context, _info: any): Promise<Tokens> {
       let start: any = new Date()
-      console.log('REGISTER', args)
-      logger.info('Register user create start')
       const resp = await UserController.create(args)
-      const user = await UserController.getById(resp.insertedId.toString())
-      console.log('user', user)
       let end: any = new Date()
       logger.info(`Register user create end ${end - start}`)
+      const user = await UserController.getById(resp.insertedId.toString())
       start = new Date()
       const accessToken: string = createToken(TokenType.accessToken, user as UserType)
       const refreshToken: string = createToken(TokenType.refreshToken, user as UserType)
