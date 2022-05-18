@@ -1,5 +1,5 @@
 // import { ForbiddenError, AuthenticationError } from 'apollo-server-express'
-// import { UserController } from '../controllers/index.js'
+import { UserController } from '../controllers/index.js'
 import {
   Context,
   //   DecodedToken,
@@ -47,11 +47,11 @@ export default {
   },
   Mutation: {
     async register(_parent: any, args: RegisterInput, _context: Context, _info: any): Promise<Tokens> {
-      //   let start: any = new Date()
-      logger.info(args)
-      //   const resp = await UserController.create(args)
-      //   let end: any = new Date()
-      //   logger.info(`Register user create end ${end - start}`)
+      let start: any = new Date()
+      const resp = await UserController.create(args)
+      let end: any = new Date()
+      console.log(resp)
+      logger.info(`Register user create end ${end - start}`)
       //   const user = await UserController.getById(resp.insertedId.toString())
       //   start = new Date()
       //   const accessToken: string = createToken(TokenType.accessToken, user as UserType)
