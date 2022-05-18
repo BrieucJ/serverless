@@ -40,12 +40,12 @@ export default class User extends BaseEntity {
   @BeforeInsert()
   @BeforeUpdate()
   async hook() {
-    let start: any = new Date()
+    const start: any = new Date()
     await validateOrReject(this, { validationError: { target: false } }).catch((errors: ValidationError[]) => {
       throw new UserInputError('VALIDATION_ERROR', { errors: errors })
     })
     this.password = hashPassword(this.password)
-    let end: any = new Date()
+    const end: any = new Date()
     logger.info(`HOOK ${end - start}`)
   }
 }

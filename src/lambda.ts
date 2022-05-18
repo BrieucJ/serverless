@@ -11,9 +11,9 @@ import { Context } from './utils/types'
 
 logger.info('Lambda started')
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
-let start: any = new Date()
+const start: any = new Date()
 await source.initialize()
-let end: any = new Date()
+const end: any = new Date()
 logger.info(`Source initialized ${end - start}`)
 const apolloServer = new ApolloServer({
   typeDefs,
