@@ -8,8 +8,8 @@
     "compile": "tsc && cp package.json ./dist/package.json && cd dist && yarn install --prod",
     "start": "tsc && NODE_ENV=production node ./dist/index.js",
     "dev": "concurrently 'tsc -w && cp .env.development ./dist/.env.development' 'NODE_ENV=development nodemon ./dist/index.js'",
-    "test": "yarn compile && NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --silent=false --verbose --runInBand",
-    "test:coverage": "yarn compile && NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest --runInBand --coverage",
+    "test": "yarn compile && NODE_ENV=test yarn node --experimental-vm-modules $(yarn bin jest) --silent=false --verbose --runInBand",
+    "test:coverage": "yarn compile && NODE_ENV=test yarn node --experimental-vm-modules $(yarn bin jest) --runInBand --coverage",
     "lint": "eslint ./src --ext .ts --fix",
     "format": "prettier --write \"**/*.+(js|ts|json)\"",
     "husky": "husky install"
