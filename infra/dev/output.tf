@@ -13,7 +13,7 @@ output "domain_name" {
   value = aws_apigatewayv2_domain_name.api.domain_name
 }
 
-output "mongoDB_url" {
-  description = "mongoDB connexion string"
+output "mongo_db_url" {
+  description = "mongo_db_url"
   value=mongodbatlas_cluster.cluster.connection_strings[0].standard_srv
 }

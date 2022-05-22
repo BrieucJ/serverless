@@ -8,12 +8,12 @@ data "terraform_remote_state" "common" {
 }
 
 data "terraform_remote_state" "env" {
+  depends_on=[mongodbatlas_cluster.cluster]
   backend = "local"
   config = {
     path = "./terraform.tfstate"
   }
 }
-
 variable "aws_region" {
   description = "AWS region"
   type = string
