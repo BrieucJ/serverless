@@ -25,9 +25,10 @@ jobs:
           node-version: 14
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@1.7.0
-        with: 'latest'
+        with:
+          mongodb-version: 'latest'
         env:
-          DATABASE_URL: 'localhost:27017'
+          DATABASE_URL: 'mongodb://localhost:27017'
       - name: Install dependencies
         run: yarn install
       - name: Run tests
