@@ -56,8 +56,8 @@ UserSchema.post('save', function (error: any, doc: IUser, next: CallbackWithoutR
       value: doc.email,
     })
     next(new UserInputError('BAD_USER_INPUT', { errors: newError.errors }))
-  } else {
-    next(new UserInputError('BAD_USER_INPUT', { errors: error }))
+  } else if (error.name === 'ValidationError') {
+    next(new UserInputError('BAD_USER_INPUT', { errors: error.errors }))
   }
 })
 const User = mongoose.model<IUser>('User', UserSchema)

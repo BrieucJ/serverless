@@ -40,5 +40,9 @@ resource "mongodbatlas_database_user" "user" {
     role_name = "dbAdmin"
     database_name = var.mongodbatlas_database_name
   }
+  roles {
+    role_name = "readWrite"
+    database_name = var.mongodbatlas_database_name
+  }
 }
 

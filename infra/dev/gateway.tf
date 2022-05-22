@@ -5,7 +5,7 @@ resource "aws_apigatewayv2_api" "api" {
 }
 
 resource "aws_apigatewayv2_domain_name" "api" {
-  domain_name = "api.${var.domain_name}"
+  domain_name = var.environment == "prod" ? "api.${var.domain_name}" : "api-${var.environment}.${var.domain_name}"
   domain_name_configuration {
     certificate_arn = data.aws_acm_certificate.issued.arn
     endpoint_type   = "REGIONAL"

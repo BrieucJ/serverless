@@ -17,3 +17,8 @@ output "mongo_db_url" {
   description = "mongo_db_url"
   value=mongodbatlas_cluster.cluster.connection_strings[0].standard_srv
 }
+
+output "lambda_env_variables" {
+  description = "Lambda's function environment variables"
+  value=aws_lambda_function.lambda.environment
+}
