@@ -1,4 +1,4 @@
-import { db } from './db.js'
+import { User } from '../models/index.js'
 import { DecodedToken, TokenType, Context, UserType } from './types.js'
 import { AuthenticationError, ForbiddenError } from 'apollo-server-express'
 import jwt from 'jsonwebtoken'
@@ -69,7 +69,7 @@ export const authContext = async (context: Context): Promise<Context> => {
   const accessToken = context.req.headers.authorization || ''
   try {
     const decodedToken = jwt.verify(accessToken.split(' ')[1], process.env.ACCESS_TOKEN_SECRET!) as any as DecodedToken
-    const user = await db.collection('users').findOne({ where: { email: decodedToken.email } })
+    const user = await User.findOne({ email: decodedToken.email })
     if (user === null) return { ...context, user: null }
     return { ...context, user: { _id: user._id } }
   } catch (error) {

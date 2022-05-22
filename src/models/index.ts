@@ -1,1 +1,1 @@
-export { default as userSchema } from './user.js'
+export { default as User } from './user.js'

@@ -2,8 +2,8 @@ import { ApolloServer } from 'apollo-server-lambda'
 import { connect } from './utils/db.js'
 import resolvers from './resolvers/index.js'
 import typeDefs from './typeDefs/index.js'
-// import errorFormatter from './utils/errorFormatter.js'
-// import responseFormatter from './utils/responseFormatter.js'
+import responseFormatter from './utils/responseFormatter.js'
+import errorFormatter from './utils/errorFormatter.js'
 import { authContext } from './utils/authentication.js'
 import logger from './utils/logger.js'
 import { Request } from 'express'
@@ -24,8 +24,8 @@ const apolloServer = new ApolloServer({
     context.req = req
     return await authContext(context as Context)
   },
-  //   formatError: errorFormatter,
-  //   formatResponse: responseFormatter,
+  formatResponse: responseFormatter,
+  formatError: errorFormatter,
 })
 logger.info('Apollo server started')
 

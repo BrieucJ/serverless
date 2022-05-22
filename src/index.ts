@@ -8,8 +8,8 @@ import resolvers from './resolvers/index.js'
 import typeDefs from './typeDefs/index.js'
 import { Context } from './utils/types.js'
 import { authContext } from './utils/authentication.js'
-// import errorFormatter from './utils/errorFormatter.js'
-// import responseFormatter from './utils/responseFormatter.js'
+import responseFormatter from './utils/responseFormatter.js'
+import errorFormatter from './utils/errorFormatter.js'
 
 await connect()
 
@@ -20,8 +20,8 @@ const server = new ApolloServer({
   context: async (context: Context) => {
     return await authContext(context)
   },
-  //   formatError: errorFormatter,
-  //   formatResponse: responseFormatter,
+  formatResponse: responseFormatter,
+  formatError: errorFormatter,
 })
 
 await server.start()
