@@ -32,34 +32,34 @@ jobs:
         run: yarn install
       - name: Run tests
         run: yarn test
-  # build:
-  #   runs-on: ubuntu-latest
-  #   needs: [test]
-  #   if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v2
-  #     - name: Install dependencies
-  #       run: yarn install
-  #     - name: Remove dist folder
-  #       run: rm -rf ./dist
-  #     - name: Compile src
-  #       run: yarn compile
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v1
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: ${{ env.AWS_REGION }}
-  #     - name: Deploy on prod
-  #       if: github.ref == 'refs/heads/master'
-  #       env:
-  #         DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  #         LOG_LEVEL: 'info'
-  #       run: bash ./infra/deploy.sh prod
-  #     - name: Deploy on dev
-  #       if: github.ref == 'refs/heads/develop'
-  #       env:
-  #         DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
-  #         LOG_LEVEL: 'info'
-  #       run: bash ./infra/deploy.sh dev
+  build:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: yarn install
+      - name: Remove dist folder
+        run: rm -rf ./dist
+      - name: Compile src
+        run: yarn compile
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Deploy on prod
+        if: github.ref == 'refs/heads/master'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          LOG_LEVEL: 'info'
+        run: bash ./infra/deploy.sh prod
+      - name: Deploy on dev
+        if: github.ref == 'refs/heads/develop'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
+          LOG_LEVEL: 'info'
+        run: bash ./infra/deploy.sh dev
