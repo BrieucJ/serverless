@@ -13,6 +13,7 @@ env:
   REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
   DATABASE_URL: 'mongodb://localhost:27017'
   LOG_LEVEL: debug
+  PORT: 4000
 jobs:
   test:
     runs-on: ubuntu-latest
