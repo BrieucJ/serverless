@@ -11,7 +11,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
   REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-  # DATABASE_URL: ${{ secrets.DATABASE_TEST_URL }}
+  DATABASE_URL: 'mongodb://localhost:27017'
   LOG_LEVEL: debug
 jobs:
   test:
@@ -27,8 +27,6 @@ jobs:
         uses: supercharge/mongodb-github-action@1.7.0
         with:
           mongodb-version: 'latest'
-        env:
-          DATABASE_URL: 'mongodb://localhost:27017'
       - name: Install dependencies
         run: yarn install
       - name: Run tests
