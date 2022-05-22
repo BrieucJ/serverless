@@ -48,6 +48,10 @@ export type forgotPasswordInput = {
   email: string
 }
 
+export type Error = {
+  message: string
+}
+
 type Nullable<T> = T | null
 
 type UserContext = {

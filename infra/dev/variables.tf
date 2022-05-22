@@ -1,26 +1,41 @@
 data "aws_caller_identity" "current" {}
 
+data "terraform_remote_state" "common" {
+  backend = "local"
+  config = {
+    path = "../common/terraform.tfstate"
+  }
+}
+
+data "terraform_remote_state" "env" {
+  backend = "local"
+  config = {
+    path = "./terraform.tfstate"
+  }
+}
+
 variable "aws_region" {
   description = "AWS region"
-  default = "eu-west-3"
   type = string
 }
 
 variable "project_name" {
   description = "Project's name"
-  default = "new-project"
   type = string
 }
 
 variable "domain_name" {
   description = "Project's domain name"
-  default = "toutatis.ai"
   type = string
 }
 
 variable "environment" {
   description = "Project's environment"
-  default = "dev"
+  type = string
+}
+
+variable "database_instance_size" {
+  description = "MongoDB Atlas instance size"
   type = string
 }
 
@@ -51,7 +66,16 @@ variable "mongodbatlas_database_name" {
 
 variable "atlas_region" {
   description = "MongoDB Atlas dev database name"
-  default = "EU-WEST-3"
+  type = string
+}
+
+variable "ACCESS_TOKEN_SECRET" {
+  description = "ACCESS_TOKEN_SECRET"
+  type = string
+}
+
+variable "REFRESH_TOKEN_SECRET" {
+  description = "REFRESH_TOKEN_SECRET"
   type = string
 }
 

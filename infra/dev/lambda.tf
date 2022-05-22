@@ -14,6 +14,10 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = {
       NODE_ENV = "development"
+      DATABASE_URL=data.terraform_remote_state.env.outputs.mongoDB_url
+      LOG_LEVEL="info"
+      ACCESS_TOKEN_SECRET=var.ACCESS_TOKEN_SECRET
+      REFRESH_TOKEN_SECRET=var.REFRESH_TOKEN_SECRET
     }
   }
 }

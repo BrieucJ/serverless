@@ -4,7 +4,7 @@ import casual from 'casual'
 import { db, connect } from '../utils/db.js'
 import { comparePassword } from '../utils/authentication.js'
 
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access */
 describe('User model', () => {
   const newUser = {
     username: casual.username,

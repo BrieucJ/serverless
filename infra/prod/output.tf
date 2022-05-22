@@ -8,7 +8,12 @@ output "base_url" {
   value = aws_apigatewayv2_stage.stage.invoke_url
 }
 
-output "route53" {
-  description = "aws_route53_record alias"
-  value = aws_route53_record.dns_record.alias
+output "domain_name" {
+  description = "Lambda gateway domain url"
+  value = aws_apigatewayv2_domain_name.api.domain_name
+}
+
+output "mongoDB_url" {
+  description = "mongoDB connexion string"
+  value=mongodbatlas_cluster.cluster.connection_strings[0].standard_srv
 }

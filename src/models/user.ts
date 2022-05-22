@@ -1,74 +1,20 @@
-// import Joi from 'joi'
-// import { db } from '../utils/db.js'
-// const { ValidationError } = Joi
-
-// const lookup = async (value: string) => {
-//   const user = await db.collection('users').find({ email: value }).toArray()
-//   if (user.length !== 0) {
-//     throw new ValidationError(
-//       'string.email',
-//       [
-//         {
-//           message: 'email_must_be_unique',
-//           path: ['email'],
-//           type: 'string.email',
-//           context: {
-//             key: 'email',
-//             label: 'email',
-//             value,
-//           },
-//         },
-//       ],
-//       value,
-//     )
-//   }
-//   return value
-// }
-
-// const isObjectId = function (value: any) {
-//   const objIdPattern = /^[0-9a-fA-F]{24}$/
-//   return Boolean(value) && !Array.isArray(value) && objIdPattern.test(String(value))
-// }
-
-// export default Joi.object({
-//   _id: Joi.custom((value, helpers) => {
-//     if (!isObjectId(value)) {
-//       return helpers.error('any.invalid')
-//     }
-//     return value as string
-//   }),
-//   username: Joi.string().trim().min(3).max(50).required().messages({
-//     'string.base': 'username_is_required',
-//     'string.min': 'username_must_be_at_least_3_characters',
-//     'string.max': 'username_must_be_less_than_50_characters',
-//     'any.required': 'username_is_required',
-//     'string.empty': 'username_is_required',
-//     'any.invalid': 'username_is_required',
-//   }),
-//   email: Joi.string().trim().email().required().external(lookup).messages({
-//     'string.email': 'email_must_be_an_email',
-//     'string.base': 'email_is_required',
-//     'any.required': 'email_is_required',
-//     'string.empty': 'email_is_required',
-//     'any.invalid': 'email_is_required',
-//   }),
-//   password: Joi.string().min(8).required().messages({
-//     'string.min': 'password_must_be_at_least_8_characters',
-//     'string.base': 'password_is_required',
-//     'any.required': 'password_is_required',
-//     'string.empty': 'password_is_required',
-//     'any.invalid': 'password_is_required',
-//   }),
-//   confirmed: Joi.boolean().required().default(false),
-//   createdAt: Joi.date().required().default(new Date()),
-//   updatedAt: Joi.date().required().default(new Date()),
-// })
-
-import mongoose from 'mongoose'
+import mongoose, { Types, HydratedDocument, CallbackWithoutResultAndOptionalError } from 'mongoose'
+const { MongooseError } = mongoose
+import { MongoServerError } from 'mongodb'
 import { UserInputError } from 'apollo-server-express'
 import { hashPassword } from '../utils/authentication.js'
 
-const UserSchema = new mongoose.Schema(
+type IUser = {
+  _id: Types.ObjectId
+  username: string
+  email: string
+  password: string
+  confirmed: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+const UserSchema = new mongoose.Schema<IUser>(
   {
     username: {
       type: String,
@@ -96,22 +42,33 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true },
 )
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre<HydratedDocument<IUser>>('save', function (next: CallbackWithoutResultAndOptionalError) {
   this.password = hashPassword(this.password)
   next()
 })
 
-UserSchema.post('save', function (error: any, _doc: any, next: any) {
-  if (error.code === 11000) {
-    const error = new mongoose.Error.ValidationError(this)
-    error.errors.email = new mongoose.Error.ValidatorError({ message: 'email_must_be_unique', type: 'unique', path: 'email', value: this.email })
-    next(new UserInputError('BAD_USER_INPUT', { errors: error.errors }))
-  } else if (error.name === 'ValidationError') {
-    next(new UserInputError('BAD_USER_INPUT', { errors: error.errors }))
+UserSchema.post('save', function (error: any, doc: IUser, next: CallbackWithoutResultAndOptionalError) {
+  // console.log('instance', typeof error)
+  // console.log('error.name', error.name)
+  // console.log('MongoServerError', error instanceof MongoServerError)
+  // console.log('error.constructor', error.constructor.name)
+  /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment */
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    // console.log('Duplicate Error')
+    const newError = new mongoose.Error.ValidationError(error)
+    newError.errors.email = new mongoose.Error.ValidatorError({
+      message: 'email_must_be_unique',
+      type: 'unique',
+      path: 'email',
+      value: doc.email,
+    })
+    // console.log('ERROR', newError)
+    next(new UserInputError('BAD_USER_INPUT', { errors: newError.errors }))
   } else {
-    next(new UserInputError('BAD_USER_INPUT', { error }))
+    // console.log('ValidationError')
+    next(new UserInputError('BAD_USER_INPUT', { errors: error }))
   }
 })
-const User = mongoose.model('User', UserSchema)
+const User = mongoose.model<IUser>('User', UserSchema)
 
 export default User

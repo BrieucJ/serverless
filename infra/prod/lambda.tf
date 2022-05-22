@@ -13,7 +13,11 @@ resource "aws_lambda_function" "lambda" {
   role = aws_iam_role.lambda_exec.arn
   environment {
     variables = {
-      NODE_ENV = "production"
+      NODE_ENV = "development"
+      DATABASE_URL=data.terraform_remote_state.env.outputs.mongoDB_url
+      LOG_LEVEL="info"
+      ACCESS_TOKEN_SECRET=var.ACCESS_TOKEN_SECRET
+      REFRESH_TOKEN_SECRET=var.REFRESH_TOKEN_SECRET
     }
   }
 }
