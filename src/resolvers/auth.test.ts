@@ -68,6 +68,7 @@ describe('Auth resolver', () => {
 
   beforeAll(async () => {
     await connect()
+    await db.dropDatabase()
     testServer = await initTestServer()
   })
 

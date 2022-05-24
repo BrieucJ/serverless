@@ -35,6 +35,7 @@ describe('User resolver', () => {
 
   beforeAll(async () => {
     await connect()
+    await db.dropDatabase()
     testServer = await initTestServer()
     await User.create(testUser)
   })

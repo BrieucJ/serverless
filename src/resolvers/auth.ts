@@ -1,4 +1,4 @@
-import { ForbiddenError, AuthenticationError } from 'apollo-server-express'
+import { ForbiddenError, UserInputError } from 'apollo-server-express'
 import { User } from '../models/index.js'
 import {
   Context,
@@ -20,7 +20,7 @@ export default {
   Query: {
     async login(_parent: any, args: LoginInput, _context: Context, _info: any): Promise<Tokens> {
       const user = await User.findOne({ email: args.email })
-      if (!user) throw new AuthenticationError('wrong_email_or_password')
+      if (!user) throw new UserInputError('wrong_email_or_password')
       await comparePassword(args.password, user.password)
       const accessToken: string = createToken(TokenType.accessToken, user)
       const refreshToken: string = createToken(TokenType.refreshToken, user)
