@@ -6,10 +6,10 @@ export default {
   transform: {
     '^.+\\.ts?$': 'ts-jest',
   },
-  transformIgnorePatterns: ['./node_modules/'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
   globals: {
     'ts-jest': {
-      useESM: true,
+      tsconfig: 'tsconfig.json',
     },
   },
   moduleNameMapper: {

@@ -49,6 +49,6 @@ TranslationSchema.post('save', function (error: any, doc: ITranslation, next: Ca
 })
 
 const Translation = mongoose.model<ITranslation>('Translation', TranslationSchema)
-await Translation.createIndexes()
-
+// const index = await Translation.createIndexes()
+// console.log(index)
 export default Translation
