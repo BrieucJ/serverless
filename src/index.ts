@@ -14,9 +14,9 @@ import errorFormatter from './utils/errorFormatter.js'
 await connect()
 
 logger.info('Connected to DB')
-
+// 'http://localhost:3000', 'https://studio.apollographql.com'
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+  origin: ['*'],
   credentials: true,
 }
 

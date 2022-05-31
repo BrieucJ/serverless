@@ -26,7 +26,15 @@ const apolloServer = new ApolloServer({
   },
   formatResponse: responseFormatter,
   formatError: errorFormatter,
+  csrfPrevention: true,
 })
 logger.info('Apollo server started')
 
-export const handler = apolloServer.createHandler()
+export const handler = apolloServer.createHandler({
+  expressGetMiddlewareOptions: {
+    cors: {
+      origin: '*',
+      credentials: true,
+    },
+  },
+})
