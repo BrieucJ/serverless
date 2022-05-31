@@ -9,12 +9,12 @@ import {
   refreshTokensInput,
   forgotPasswordInput,
   RegisterInput,
-  UserType,
   confirmEmailInput,
   changePasswordInput,
 } from '../utils/types.js'
 import { comparePassword, createToken, verifyToken } from '../utils/authentication.js'
 import mailer from '../utils/mailer.js'
+import logger from '../utils/logger.js'
 
 export default {
   Query: {
@@ -35,8 +35,12 @@ export default {
       return { accessToken, refreshToken }
     },
     async forgotPassword(_parent: any, args: forgotPasswordInput, _context: Context, _info: any): Promise<string> {
-      const user: UserType | null = await User.findOne({ where: { email: args.email } })
-      if (user) await mailer(user, 'forgotPasswordEmail')
+      const user = await User.findOne({ email: args.email })
+      if (user) {
+        await mailer(user, 'forgotPasswordEmail').catch((error) => {
+          logger.error(error)
+        })
+      }
       return 'email_sent_if_exist'
     },
   },

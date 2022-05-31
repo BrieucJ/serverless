@@ -15,6 +15,5 @@ export default gql`
   type Query {
     me: User
     users: [User]
-    usersList: [User]
   }
 `

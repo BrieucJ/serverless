@@ -14,6 +14,12 @@ import errorFormatter from './utils/errorFormatter.js'
 await connect()
 
 logger.info('Connected to DB')
+
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
+  credentials: true,
+}
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -22,12 +28,12 @@ const server = new ApolloServer({
   },
   formatResponse: responseFormatter,
   formatError: errorFormatter,
+  csrfPrevention: true,
 })
 
 await server.start()
-
 const app = express()
-server.applyMiddleware({ app, path: API_PATH })
+server.applyMiddleware({ app, path: API_PATH, cors: corsOptions })
 app.listen(process.env.PORT, () => {
   logger.info(`🚀 Server started on localhost:${process.env.PORT!}${API_PATH}`)
 })

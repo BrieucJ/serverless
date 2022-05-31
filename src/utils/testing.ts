@@ -20,8 +20,7 @@ export const initTestServer = async () => {
     formatResponse: responseFormatter,
     formatError: errorFormatter,
     context: async (context) => {
-      const authCtx = await authContext(context)
-      return { ...authCtx, ...context }
+      return await authContext(context)
     },
   })
   await server.start()

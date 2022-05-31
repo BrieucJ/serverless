@@ -12,7 +12,9 @@ type Mail = {
   html: string
 }
 
-const getMailOptions = (user: UserType, mailType: string): Mail => {
+type mailType = 'confirmEmail' | 'forgotPasswordEmail'
+
+const getMailOptions = (user: UserType, mailType: mailType): Mail => {
   const options = {
     from: '',
     to: user.email,
@@ -43,7 +45,7 @@ const getMailOptions = (user: UserType, mailType: string): Mail => {
   return options
 }
 
-export default async (user: UserType, mailType: string) => {
+export default async (user: UserType, mailType: mailType) => {
   logger.info(`Sending ${mailType} to ${user.email}`)
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing

@@ -20,7 +20,7 @@ export const createToken = (tokenType: TokenType, user: UserType): string => {
       return (
         'Bearer ' +
         jwt.sign({ email: user.email }, process.env.ACCESS_TOKEN_SECRET!, {
-          expiresIn: '30s',
+          expiresIn: '15m',
         })
       )
     case TokenType.refreshToken:
@@ -73,14 +73,19 @@ export const authContext = async (context: Context): Promise<Context> => {
     if (user === null) return { ...context, user: null }
     return { ...context, user: { _id: user._id } }
   } catch (error) {
-    if (error instanceof jwt.TokenExpiredError) {
-      throw new AuthenticationError('accessToken_expired')
-    }
     return { ...context, user: null }
   }
 }
 
 export const Authenticated = (context: Context): Context => {
+  const accessToken = context.req.headers.authorization || ''
+  try {
+    jwt.verify(accessToken.split(' ')[1], process.env.ACCESS_TOKEN_SECRET!) as any as DecodedToken
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new AuthenticationError('accessToken_expired')
+    }
+  }
   if (context.user === null) throw new ForbiddenError('must_be_logged_in')
   return context
 }

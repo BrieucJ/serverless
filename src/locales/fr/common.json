@@ -1,0 +1,15 @@
+{
+  "register": "S'inscrire",
+  "login": "Se connecter",
+  "email": "Email",
+  "username": "Nom d'utilisateur",
+  "password": "Mot de passe",
+  "email_not_confirmed": "Vous devez valider votre email.",
+  "username_too_short": "Nom d'utilisateur trop court (min. 3 caractères)",
+  "must_be_an_email": "Email non valide",
+  "password_too_short": "Mot de passe trop court (min. 8 caractères)",
+  "confirmation_email_sent": "Un email vous a été envoyé avec un lien pour vous connectez.",
+  "email_already_exists": "Un compte existe déjà avec cet email.",
+  "verifyToken_expired": "Le lien de confirmation a expiré.",
+  "resend_confirmation_email": "Renvoyer un email de confirmation."
+}

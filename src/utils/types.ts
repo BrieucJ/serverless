@@ -20,6 +20,11 @@ export enum TokenType {
   forgotToken,
 }
 
+export type translationInput = {
+  locale: string
+  ns: string
+}
+
 export type LoginInput = {
   email: string
   password: string

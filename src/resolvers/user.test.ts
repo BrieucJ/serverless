@@ -3,6 +3,7 @@ import { db, connect } from '../utils/db.js'
 import { gql } from 'apollo-server-express'
 import casual from 'casual'
 import { initTestServer } from '../utils/testing.js'
+import jwt from 'jsonwebtoken'
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
 
@@ -35,7 +36,6 @@ describe('User resolver', () => {
 
   beforeAll(async () => {
     await connect()
-    await db.dropDatabase()
     testServer = await initTestServer()
     await User.create(testUser)
   })
@@ -55,7 +55,7 @@ describe('User resolver', () => {
     expect(result.data?.me.email).toBe(testUser.email)
   })
 
-  it('me Query | should not return the current logged in user without valid accessToken', async () => {
+  it('me Query | should not return the current logged-in user without valid accessToken', async () => {
     const result = await testServer.execute({
       query: ME_QUERY,
       context: { headers: { authorization: '' } },
@@ -63,6 +63,17 @@ describe('User resolver', () => {
     expect(result.data).toBe(null)
     expect(result.errors).toBeDefined()
     expect(result.errors[0].message).toBe('must_be_logged_in')
+  })
+
+  it('me Query | should not return the current logged-in user with an expired accessToken', async () => {
+    const expiredToken = 'Bearer ' + jwt.sign({ email: testUser.email }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1' }) //expires in 1ms
+    const result = await testServer.execute({
+      query: ME_QUERY,
+      context: { headers: { authorization: expiredToken } },
+    })
+    expect(result.errors).toBeDefined()
+    expect(result.errors?.[0].message).toBe('accessToken_expired')
+    expect(result.data).toBe(null)
   })
 
   afterAll(async () => {

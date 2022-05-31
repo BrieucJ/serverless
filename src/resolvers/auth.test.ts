@@ -68,7 +68,6 @@ describe('Auth resolver', () => {
 
   beforeAll(async () => {
     await connect()
-    await db.dropDatabase()
     testServer = await initTestServer()
   })
 
@@ -308,10 +307,10 @@ describe('Auth resolver', () => {
   })
 
   it('should not refresh tokens given a refreshToken with unknown email', async () => {
-    const expiredToken = 'Bearer ' + jwt.sign({ email: 'unknown_email' }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '1d' })
+    const token = 'Bearer ' + jwt.sign({ email: 'unknown_email' }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '1d' })
     const result = await testServer.execute({
       query: REFRESH_TOKENS_QUERY,
-      variables: { refreshToken: expiredToken },
+      variables: { refreshToken: token },
     })
     expect(result.errors).toBeDefined()
     expect(result.errors?.[0].message).toBe('refreshToken_invalid')
@@ -325,7 +324,7 @@ describe('Auth resolver', () => {
     })
     expect(result.errors).toBeUndefined()
     expect(result.data?.forgotPassword).toBe('email_sent_if_exist')
-  })
+  }, 150000)
 
   it('should send back email_sent_if_exist for an invalid email', async () => {
     const result = await testServer.execute({
@@ -334,7 +333,7 @@ describe('Auth resolver', () => {
     })
     expect(result.errors).toBeUndefined()
     expect(result.data?.forgotPassword).toBe('email_sent_if_exist')
-  })
+  }, 150000)
 
   it('should set confirmed to true if token is correct', async () => {
     const confirmToken = 'Bearer ' + jwt.sign({ email: testUser.email }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1d' })

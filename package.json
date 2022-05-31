@@ -8,6 +8,7 @@
     "compile": "tsc && cp package.json ./dist/package.json && cd dist && yarn install --prod",
     "start": "tsc && NODE_ENV=production node ./dist/index.js",
     "dev": "tsc && cp .env.development ./dist/.env.development && concurrently 'tsc -w' 'NODE_ENV=development nodemon ./dist/index.js'",
+    "seed:dev": "tsc && cp .env.development ./dist/.env.development && NODE_ENV=development node ./dist/utils/seed.js",
     "test": "NODE_ENV=test jest --silent=false --verbose --runInBand",
     "test:coverage": "NODE_ENV=test jest --runInBand --coverage",
     "lint": "eslint ./src --ext .ts --fix",
@@ -46,11 +47,13 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
+    "@types/glob": "^7.2.0",
     "apollo-server-express": "^3.6.7",
     "apollo-server-lambda": "^3.6.7",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "glob": "^8.0.3",
     "graphql": "^15.3.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.6.0",
