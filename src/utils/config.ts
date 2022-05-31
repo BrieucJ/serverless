@@ -7,6 +7,7 @@ if (!process.env.NODE_ENV) {
   process.exit(1)
 }
 const envPath = process.env.NODE_ENV == 'production' ? path.resolve(process.cwd(), `.env`) : path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`)
+console.log(envPath)
 dotenv.config({ path: envPath })
 
 export const API_PATH = '/api/v1'
