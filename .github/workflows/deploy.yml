@@ -45,6 +45,8 @@ jobs:
         run: rm -rf ./dist
       - name: Compile src
         run: yarn compile
+      - name: Seed database
+        run: yarn seed:ci
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

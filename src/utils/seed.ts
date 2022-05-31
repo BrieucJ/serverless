@@ -6,6 +6,7 @@ import fs from 'fs'
 import { Translation } from '../models/index.js'
 
 export const seed = async () => {
+  console.log('SEED')
   logger.info('Seeding')
   await connect()
   logger.info('Seeding translations')
@@ -36,4 +37,10 @@ export const seed = async () => {
   )
   await db.close()
   logger.info('Finished seeding')
+}
+
+if (process.argv[2] === 'seed') {
+  seed().catch((error) => {
+    console.log(error)
+  })
 }
