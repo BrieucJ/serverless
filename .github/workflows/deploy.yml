@@ -37,16 +37,17 @@ jobs:
     needs: [test]
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
     steps:
-      - name: Env variables
-        if: github.ref == 'refs/heads/develop'
-        env:
-          NODE_ENV: development
-          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
-          LOG_LEVEL: 'info'
+      - name: Env production variables
         if: github.ref == 'refs/heads/master'
         env:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          LOG_LEVEL: 'info'
+      - name: Env development variables
+        if: github.ref == 'refs/heads/develop'
+        env:
+          NODE_ENV: development
+          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
           LOG_LEVEL: 'info'
       - name: Checkout repo
         uses: actions/checkout@v2
