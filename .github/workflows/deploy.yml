@@ -39,15 +39,15 @@ jobs:
     steps:
       - name: Env variables
         if: github.ref == 'refs/heads/develop'
-          env:
-            NODE_ENV: development
-            DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
-            LOG_LEVEL: 'info'
+        env:
+          NODE_ENV: development
+          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
+          LOG_LEVEL: 'info'
         if: github.ref == 'refs/heads/master'
-          env:
-            NODE_ENV: production
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            LOG_LEVEL: 'info'
+        env:
+          NODE_ENV: production
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          LOG_LEVEL: 'info'
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Install dependencies
@@ -66,6 +66,10 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - name: Deploy on prod
         if: github.ref == 'refs/heads/master'
+        env:
+          NODE_ENV: production
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          LOG_LEVEL: 'info'
         run: bash ./infra/deploy.sh prod
       - name: Deploy on dev
         if: github.ref == 'refs/heads/develop'
