@@ -43,12 +43,14 @@ jobs:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           LOG_LEVEL: 'info'
+        run: echo defined production variables
       - name: Env development variables
         if: github.ref == 'refs/heads/develop'
         env:
           NODE_ENV: development
           DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
           LOG_LEVEL: 'info'
+        run: echo defined development variables
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Install dependencies
