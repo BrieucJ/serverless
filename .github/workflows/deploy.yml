@@ -37,20 +37,6 @@ jobs:
     needs: [test]
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
     steps:
-      - name: Env production variables
-        if: github.ref == 'refs/heads/master'
-        env:
-          NODE_ENV: production
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          LOG_LEVEL: 'info'
-        run: echo defined production variables
-      - name: Env development variables
-        if: github.ref == 'refs/heads/develop'
-        env:
-          NODE_ENV: development
-          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
-          LOG_LEVEL: 'info'
-        run: echo defined development variables
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Install dependencies
@@ -59,7 +45,17 @@ jobs:
         run: rm -rf ./dist
       - name: Compile src
         run: yarn compile
-      - name: Seed database
+      - name: Seed development database
+        if: github.ref == 'refs/heads/develop'
+        env:
+          NODE_ENV: development
+          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
+        run: yarn seed:ci
+      - name: Seed production database
+        if: github.ref == 'refs/heads/master'
+        env:
+          NODE_ENV: production
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: yarn seed:ci
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -76,4 +72,8 @@ jobs:
         run: bash ./infra/deploy.sh prod
       - name: Deploy on dev
         if: github.ref == 'refs/heads/develop'
+        env:
+          NODE_ENV: development
+          DATABASE_URL: ${{ secrets.DATABASE_DEV_URL }}
+          LOG_LEVEL: 'info'
         run: bash ./infra/deploy.sh dev

@@ -6,8 +6,7 @@ import fs from 'fs'
 import { Translation } from '../models/index.js'
 
 export const seed = async () => {
-  console.log('SEED')
-  logger.info('Seeding')
+  logger.info('Seeding DB')
   await connect()
   logger.info('Seeding translations')
   const files = glob.sync('src/locales/**/*.json')
