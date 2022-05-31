@@ -33,7 +33,7 @@ logger.info('Apollo server started')
 export const handler = apolloServer.createHandler({
   expressGetMiddlewareOptions: {
     cors: {
-      origin: '*',
+      origin: ['http://localhost:3000', 'https://studio.apollographql.com'],
       credentials: true,
     },
   },
